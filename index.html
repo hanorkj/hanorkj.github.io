@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sejam bem vindos ao meu mundo!</title>
+    <meta name="description" content="Serviços especializados em elétrica, hidráulica para piscinas e automação residencial.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET E ESTILOS GLOBAIS */
+        :root {
+            --primary: #0A7E8C;        /* tom técnico azul-esverdeado */
+            --primary-dark: #065f6b;
+            --primary-light: rgba(10, 126, 140, 0.1);
+            --bg-dark: #0B0B0F;
+            --bg-card: #15151F;
+            --text-light: #F8F8F8;
+            --text-muted: #A1A1AA;
+            --accent-neon: #0A7E8C;
+            --success: #10B981;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --sidebar-width: 80px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 10px 30px rgba(10, 126, 140, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .monospace {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* SIDEBAR LATERAL */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(11, 11, 15, 0.95);
+            border-right: 1px solid rgba(10, 126, 140, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .sidebar:hover {
+            width: 220px;
+            align-items: flex-start;
+            padding-left: 20px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-text {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-weight: 500;
+        }
+
+        .sidebar:hover .sidebar-text {
+            opacity: 1;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+            padding: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(10, 126, 140, 0.3);
+        }
+
+        .sidebar:hover .logo {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 0;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* HEADER COMPACTO */
+        .terminal-header {
+            background-color: rgba(11, 11, 15, 0.95);
+            border-bottom: 1px solid rgba(10, 126, 140, 0.3);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .terminal-text {
+            color: var(--text-light);
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary);
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+
+        /* HERO SECTION */
+        .hero {
+            padding: 80px 0 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(10, 126, 140, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(10, 126, 140, 0.15) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--text-light), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* SEÇÕES GLOBAIS */
+        section {
+            padding: 70px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 2px;
+        }
+
+        .about, .differentials, .tech-knowledge {
+            background-color: rgba(21, 21, 31, 0.5);
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(10, 126, 140, 0.2);
+            box-shadow: var(--shadow);
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .about-content p {
+            margin-bottom: 15px;
+        }
+
+        /* CARDS PARA SERVIÇOS E DIFERENCIAIS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .service-card, .info-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            border: 1px solid rgba(10, 126, 140, 0.2);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .service-card::before, .info-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        .service-card:hover, .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(10, 126, 140, 0.4);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: rgba(10, 126, 140, 0.1);
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card-list {
+            list-style: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .card-list li::before {
+            content: "▹";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* DIFERENCIAIS E CONHECIMENTOS */
+        .differential-item, .tech-item {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid rgba(10, 126, 140, 0.2);
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .differential-item:hover, .tech-item:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .differential-item strong, .tech-item strong {
+            color: var(--primary);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* CONTACT CARDS (reutilizados) */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .contact-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            border: 1px solid rgba(10, 126, 140, 0.2);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(10, 126, 140, 0.4);
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            background-color: rgba(10, 126, 140, 0.1);
+            color: var(--primary);
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .contact-card:hover .contact-icon {
+            transform: scale(1.1);
+            background-color: rgba(10, 126, 140, 0.2);
+        }
+
+        .contact-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .contact-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .contact-details {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: rgba(11, 11, 15, 0.5);
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            word-break: break-all;
+            border: 1px solid rgba(10, 126, 140, 0.1);
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 0 15px rgba(10, 126, 140, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(10, 126, 140, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(10, 126, 140, 0.1);
+            box-shadow: 0 0 10px rgba(10, 126, 140, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: rgba(11, 11, 15, 0.95);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(10, 126, 140, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* BACKGROUND ANIMATION */
+        .code-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            overflow: hidden;
+        }
+
+        .code-line {
+            position: absolute;
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100vh); }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--bg-card);
+            color: var(--text-light);
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--success);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 1000;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RIPPLE */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .main-content { margin-left: 60px; width: calc(100% - 60px); }
+            .hero h1 { font-size: 2rem; }
+            .sidebar:hover { width: 60px; padding-left: 0; }
+            .sidebar:hover .sidebar-text { opacity: 0; }
+            .contact-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background sutil -->
+    <div class="code-background" id="codeBackground"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">H</div>
+        <nav class="sidebar-nav">
+            <a href="#home" class="sidebar-item active" data-section="home">
+                <svg class="sidebar-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 22V12H15V22" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="#about" class="sidebar-item" data-section="about">
+                <svg class="sidebar-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 16V12" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 8H12.01" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-text">Sobre</span>
+            </a>
+            <a href="#servicos" class="sidebar-item" data-section="servicos">
+                <svg class="sidebar-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" stroke-linecap="round"/>
+                    <path d="M16 3L12 7L8 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-text">Serviços</span>
+            </a>
+            <a href="#diferenciais" class="sidebar-item" data-section="diferenciais">
+                <svg class="sidebar-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-text">Diferenciais</span>
+            </a>
+            <a href="#contato" class="sidebar-item" data-section="contato">
+                <svg class="sidebar-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sidebar-text">Contato</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="terminal-header">
+            <div class="container">
+                <div class="terminal">
+                    <span class="terminal-prompt monospace">></span>
+                    <span class="terminal-text monospace" id="terminalText">sistema preparado para diagnóstico.</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- HOME -->
+        <section class="hero" id="home">
+            <div class="container">
+                <h1>@jzdn.z</h1>
+                <p>Especialista em soluções técnicas para elétrica, hidráulica e desenvolvimento web: sites, bots, scripts. <span class="highlight">Segurança, eficiência e inovação</span> em cada projeto.</p>
+            </div>
+        </section>
+
+        <!-- SOBRE MIM -->
+        <section class="about" id="about">
+            <div class="container">
+                <h2 class="section-title">Sobre mim</h2>
+                <div class="about-content">
+                    <p>Atuo na área técnica com foco em soluções completas em elétrica e sistemas hidráulicos, especialmente voltados para piscinas. Tenho experiência prática em instalação, manutenção e diagnóstico de falhas, sempre priorizando segurança, eficiência e durabilidade.</p>
+                    <p>Além disso, estou em constante evolução na área de tecnologia (T.I), aplicando lógica e automação para melhorar processos e sistemas.</p>
+                    <div class="code-block" style="background: rgba(10,126,140,0.05); border-left-color: var(--primary); padding: 15px; border-radius: 8px; margin-top: 20px; font-family: monospace;">
+                        # diagnose && repair<br>
+                        system.check(hardware) ? "ok" : "intervenção necessária"
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVIÇOS ESPECIALIZADOS -->
+        <section id="servicos" style="padding: 70px 0;">
+            <div class="container">
+                <h2 class="section-title">Serviços Especializados</h2>
+                <div class="cards-grid">
+                    <!-- Elétrica -->
+                    <div class="service-card">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">Elétrica</h3>
+                        <ul class="card-list">
+                            <li>Instalação e manutenção elétrica residencial</li>
+                            <li>Interruptores, tomadas e quadros de distribuição</li>
+                            <li>Montagem e instalação de contatoras</li>
+                            <li>Automação com dispositivos inteligentes (Sonoff)</li>
+                            <li>Diagnóstico e correção de falhas elétricas</li>
+                        </ul>
+                    </div>
+                    <!-- Piscinas e Hidráulica -->
+                    <div class="service-card">
+                        <div class="card-icon">💧</div>
+                        <h3 class="card-title">Piscinas & Hidráulica</h3>
+                        <ul class="card-list">
+                            <li>Instalação de bombas e filtros</li>
+                            <li>Troca e manutenção de areia de filtro</li>
+                            <li>Adaptação de tubulações</li>
+                            <li>Diagnóstico de vazamentos e baixa eficiência</li>
+                            <li>Manutenção preventiva e corretiva</li>
+                        </ul>
+                    </div>
+                    <!-- Aquecimento e Conforto -->
+                    <div class="service-card">
+                        <div class="card-icon">🔥</div>
+                        <h3 class="card-title">Aquecimento & Conforto</h3>
+                        <ul class="card-list">
+                            <li>Instalação de aquecedor solar</li>
+                            <li>Instalação de trocadores de calor</li>
+                            <li>Sistemas de aquecimento para piscinas</li>
+                            <li>Instalação e manutenção de saunas</li>
+                            <li>Instalação de banheiras de hidromassagem</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIFERENCIAIS -->
+        <section class="differentials" id="diferenciais">
+            <div class="container">
+                <h2 class="section-title">Diferenciais</h2>
+                <div class="tech-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="differential-item"><strong>Experiência prática em campo</strong>, não apenas teórica, com resolução de problemas reais.</div>
+                    <div class="differential-item"><strong>Capacidade de adaptação</strong>, soluções sob medida para cada situação.</div>
+                    <div class="differential-item"><strong>Visão técnica integrada</strong>, elétrica + hidráulica + automação.</div>
+                    <div class="differential-item"><strong>Compromisso com segurança</strong> e funcionamento correto do sistema.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONHECIMENTOS EM T.I -->
+        <section class="tech-knowledge" style="padding: 70px 0;">
+            <div class="container">
+                <h2 class="section-title">Conhecimentos em T.I</h2>
+                <div class="tech-grid">
+                    <div class="tech-item"><strong>Lógica de programação</strong>, base para automação e diagnósticos inteligentes.</div>
+                    <div class="tech-item"><strong>Automação básica</strong>, integração de dispositivos e sistemas.</div>
+                    <div class="tech-item"><strong>Interesse em segurança da informação</strong>, boas práticas e proteção.</div>
+                    <div class="tech-item"><strong>Integração entre sistemas físicos e digitais</strong>, IoT e controle.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTATO -->
+        <section class="contacts" id="contato">
+            <div class="container">
+                <h2 class="section-title">Contato</h2>
+                <div class="contacts-grid">
+                    <!-- WhatsApp Card -->
+                    <div class="contact-card">
+                        <div class="contact-header">
+                            <div class="contact-icon">📱</div>
+                            <h3 class="contact-title">WhatsApp</h3>
+                        </div>
+                        <p class="contact-description">Atendimento rápido e orçamentos personalizados.</p>
+                        <div class="contact-details monospace">+55 13 99693-2716</div>
+                        <div class="contact-actions">
+                            <button class="btn btn-secondary" onclick="copyToClipboard('+55 13 99693-2716', 'WhatsApp')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"/></svg>
+                                Copiar
+                            </button>
+                            <button class="btn btn-primary" onclick="openLink('https://wa.me/+5513996932716?text=Olá,%20gostaria%20de%20informações%20sobre%20serviços')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6H6C4.89543 6 4 6.89543 4 8V18C4 19.1046 4.89543 20 6 20H16C17.1046 20 18 19.1046 18 18V14"/><path d="M12 12L20 4"/><path d="M15 4H20V9"/></svg>
+                                Abrir
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Instagram Card -->
+                    <div class="contact-card">
+                        <div class="contact-header">
+                            <div class="contact-icon">📷</div>
+                            <h3 class="contact-title">Instagram</h3>
+                        </div>
+                        <p class="contact-description">Acompanhe projetos e atualizações.</p>
+                        <div class="contact-details monospace">@jzdn.z</div>
+                        <div class="contact-actions">
+                            <button class="btn btn-secondary" onclick="copyToClipboard('@jzdn.z', 'Instagram')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4C2.89543 15 2 14.1046 2 13V4C2 2.89543 2.89543 2 4 2H13C14.1046 2 15 2.89543 15 4V5"/></svg>
+                                Copiar
+                            </button>
+                            <button class="btn btn-primary" onclick="openLink('https://www.instagram.com/jzdn.z')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6H6C4.89543 6 4 6.89543 4 8V18C4 19.1046 4.89543 20 6 20H16C17.1046 20 18 19.1046 18 18V14"/><path d="M12 12L20 4"/><path d="M15 4H20V9"/></svg>
+                                Abrir
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Observação / Contato direto -->
+                    <div class="contact-card">
+                        <div class="contact-header">
+                            <div class="contact-icon">📋</div>
+                            <h3 class="contact-title">Observação</h3>
+                        </div>
+                        <p class="contact-description">Cada serviço é analisado individualmente para garantir a melhor solução técnica, evitando retrabalho e prejuízos futuros.</p>
+                        <div class="contact-details" style="font-style: italic;">Análise personalizada</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <p class="copyright">© 2025 Jz todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Background code animation
+        function createCodeLines() {
+            const bg = document.getElementById('codeBackground');
+            const snippets = [
+                'function diagnose() {', '  return checkCircuit();', '}', 'class Pump {', '  start() { }', '}',
+                'if (pressure < 1.5) {', '  alert("baixa pressão");', '}', '// instalação concluída',
+                'system.integrate(sensor);', 'water.temperature = 28;', 'relay.trigger();'
+            ];
+            for (let i = 0; i < 12; i++) {
+                const line = document.createElement('div');
+                line.className = 'code-line monospace';
+                line.textContent = snippets[Math.floor(Math.random() * snippets.length)];
+                line.style.left = Math.random() * 100 + 'vw';
+                line.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                line.style.animationDelay = Math.random() * 5 + 's';
+                bg.appendChild(line);
+            }
+        }
+
+        // Copy function
+        function copyToClipboard(text, platform) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${platform} copiado para área de transferência`);
+            }).catch(() => showToast('Erro ao copiar'));
+        }
+
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Sidebar active state and smooth scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            createCodeLines();
+
+            const items = document.querySelectorAll('.sidebar-item');
+            items.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        items.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        const targetId = this.getAttribute('href').substring(1);
+                        const target = document.getElementById(targetId);
+                        if (target) {
+                            window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // Rotating terminal text
+            const terminal = document.getElementById('terminalText');
+            const msgs = [
+                'diagnóstico de sistemas.',
+                'elétrica e hidráulica integradas.',
+                'desenvolvimento web.',
+                'soluções técnicas personalizadas.'
+            ];
+            let idx = 0;
+            setInterval(() => {
+                terminal.style.animation = 'none';
+                setTimeout(() => {
+                    idx = (idx + 1) % msgs.length;
+                    terminal.textContent = msgs[idx];
+                    terminal.style.animation = 'typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite';
+                }, 100);
+            }, 6000);
+        });
+
+        // Ripple effect (opcional, mesmo código anterior)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn') || e.target.closest('.btn')) {
+                const btn = e.target.classList.contains('btn') ? e.target : e.target.closest('.btn');
+                const ripple = document.createElement('span');
+                const d = Math.max(btn.clientWidth, btn.clientHeight);
+                const r = d / 2;
+                ripple.style.width = ripple.style.height = `${d}px`;
+                ripple.style.left = `${e.clientX - (btn.getBoundingClientRect().left + r)}px`;
+                ripple.style.top = `${e.clientY - (btn.getBoundingClientRect().top + r)}px`;
+                ripple.classList.add('ripple');
+                btn.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+    </script>
+</body>
+</html>
